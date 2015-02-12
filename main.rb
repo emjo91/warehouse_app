@@ -1,10 +1,14 @@
 require 'sinatra'
+require 'sqlite3'
+require 'pry'
+DATABASE = SQLite3::Database.new("warehouse_manager.db")
 require_relative 'category_class.rb'
 require_relative 'product_class.rb'
 require_relative 'location_class.rb'
+require_relative 'module.rb'
 require_relative 'class_module.rb'
-require_relative 'class_module.rb'
-require_relative 'class_module.rb'
+
+
 
 # Before Filter
 
@@ -36,6 +40,7 @@ get "/update_product" do
 end
 
 get "/delete_product" do
+  logger.info params
   erb :delete_product, :layout => :boilerplate
 end
 
@@ -66,9 +71,21 @@ end
 get "/delete_location" do
   erb :delete_location, :layout => :boilerplate
 end  
-  
-# Other random files
 
-get "/completed" do
-  erb :completed, :layout => :boilerplate
+# Completed Routes
+
+get "/complete_product_add" do
+  logger.info params
+  a = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}", 
+      "description"=>"#{@description}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}", 
+      "category_id"=>"#{@category_id}", "location_id"=>"#{@location_id}"})
+      a.insert
+  erb :complete_product_add, :layout => :boilerplate
+end
+
+get "/complete_delete_product" do
+  logger.info params
+  d = Product.find_record_id({"table"=>"products", "field"=>"serial_num", "value"=>"#{@serial_num}"}) 
+  Product.delete_record({"table"=>"products", "record_id"=>d})
+  erb :complete_delete_product, :layout => :boilerplate
 end
