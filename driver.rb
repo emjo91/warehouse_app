@@ -21,7 +21,6 @@ DATABASE.execute("CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, n
                                                        serial_num INTEGER UNIQUE, category_id INTEGER, location_id INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id),
                                                        FOREIGN KEY(location_id) REFERENCES locations(id))")
  
-=begin                                                      
 #-----This is our script----#
 puts "Hello, What would you like to do today?"
 puts "Press 1 for: Add or delete a product, or update its information (including category and location)"
@@ -189,7 +188,7 @@ elsif answer == 5
   puts "Goodbye!"
 
 end
-=end
+
 
 
 

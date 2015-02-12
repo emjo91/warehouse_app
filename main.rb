@@ -8,7 +8,7 @@ require_relative 'location_class.rb'
 require_relative 'module.rb'
 require_relative 'class_module.rb'
 
-
+# TODO these need work: Update a location, Add a product.
 
 # Before Filter
 
@@ -20,6 +20,8 @@ before do
   @cost = "#{params["cost"]}"
   @category_id = "#{params["category_id"]}"
   @location_id = "#{params["location_id"]}"
+  @location_name = "#{params["location_name"]}"
+  @update_location_name = "#{params["update_location_name"]}"
 end
 
 # Home Page
@@ -31,11 +33,13 @@ end
 # Updating the Product, Nav line 1
 
 get "/add_product" do
+  @title = "Add a product"
   logger.info params
   erb :add_product, :layout => :boilerplate
 end
 
 get "/update_product" do
+  logger.info params
   erb :update_product, :layout => :boilerplate
 end
 
@@ -55,6 +59,7 @@ get "/products_in_category" do
 end
 
 get "/products_in_location" do
+  logger.info params
   erb :products_in_location, :layout => :boilerplate
 end
   
@@ -72,20 +77,84 @@ get "/delete_location" do
   erb :delete_location, :layout => :boilerplate
 end  
 
-# Completed Routes
+# Completed Routes for Product
 
+# TODO sometimes works
 get "/complete_product_add" do
   logger.info params
-  a = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}", 
-      "description"=>"#{@description}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}", 
-      "category_id"=>"#{@category_id}", "location_id"=>"#{@location_id}"})
-      a.insert
-  erb :complete_product_add, :layout => :boilerplate
+  DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES 
+                  ('#{@name}', '#{@description}', #{@quantity}, #{@serial_num}, #{@cost}, #{@category_id}, #{@location_id})")
+  @id = DATABASE.last_insert_row_id 
+  erb :complete_product_add, :layout => :boilerplate 
 end
 
+# working
 get "/complete_delete_product" do
   logger.info params
   d = Product.find_record_id({"table"=>"products", "field"=>"serial_num", "value"=>"#{@serial_num}"}) 
   Product.delete_record({"table"=>"products", "record_id"=>d})
   erb :complete_delete_product, :layout => :boilerplate
+end
+
+# TODO not working
+get "/complete_product_update" do
+  logger.info params
+  erb :complete_prduct_update, :layout => :boilerplate
+end
+
+# Completed routes for product info
+
+# TODO not working
+get "/complete_product_info" do
+  @sn = params["serial_num"]
+  d = Product.find_record_id({"table"=>"products", "field"=>"serial_num", "value"=>@sn})
+  g = Category.return_category_id(d)
+  h = Category.return_category_name(g)
+  i = Location.return_location_id(d)
+  j = Location.return_location_name(i)
+  @product_info = Product.find({"table"=>"products", "record_id"=>d}) + " Category: #{h}" + " Location: #{j}"
+  erb :complete_product_info, :layout => :boilerplate
+end
+
+# TODO not working
+get "/complete_products_in_location" do
+  logger.info params
+  @location_names = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{"Room 2"}"})
+  erb :complete_products_in_location, :layout => :boilerplate
+end
+
+# TODO not working
+get "/complete_products_in_category" do
+  logger.info params
+  erb :complete_products_in_category, :layout => :boilerplate
+end
+
+# Completed routes for location stuff
+
+# working
+get "/complete_location_add" do
+  @n = params["location_name"]
+  @d = params["description"]
+  k = Location.new({"name"=>"#{@n}", "description"=>"#{@d}"}) 
+  k.insert  
+  erb :complete_location_add, :layout => :boilerplate
+end
+
+# TODO not working
+get "/complete_location_update" do
+  @nn = params["update_location_name"]
+  @n = params["location_name"]
+  @d = params["description"]
+  l = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{@n}"})
+  m = Location.new({"name"=>"#{@nn}", "description"=>"#{@d}"}) 
+  m.save({"table"=>"locations", "item_id"=>l})  
+  erb :complete_location_update, :layout => :boilerplate
+end
+
+# working
+get "/complete_location_delete" do
+  @n = params["location_name"]
+  z = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{@n}"})
+  Location.delete_record({"table"=>"locations", "record_id"=>z})
+  erb :complete_location_delete, :layout => :boilerplate
 end
