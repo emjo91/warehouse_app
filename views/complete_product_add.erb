@@ -1,5 +1,4 @@
-<h1>Your mission has been completed</h1>
-<h1>The product has been added, k thx bai pls.</h1>
+<h1>Are you sure you want to add this product?</h1>
 
 <p>Does this info look correct to you?</p>
 <p>Product Name: <%= @name%></p>
@@ -9,3 +8,22 @@
 <p>Price: <%= @cost%></p>
 <p>Category ID: <%= @category_id%></p>
 <p>Location ID: <%= @location_id%></p>
+
+<form action="/confirmed_product_add">
+  <input type="hidden" type="text" name="name" value="<%= @name %>">
+
+  <input type="hidden" type="text" name="quantity" value="<%= @quantity %>">
+
+  <textarea rows="5" cols="50" type="hidden" name="description" value="<%= @description %>">
+  </textarea>
+
+  <input type="hidden" type="text" name="serial_num" value="<%= @serial_num %>">  
+  
+  <input type="hidden" type="text" name="cost" value="<%= @cost %>">  
+
+  <input type="hidden" type="text" name="category_id" value="<%= @category_id %>">
+  
+  <input type="hidden" type="text" name="location_id" value="<%= @location_id %>">
+  <br>
+  <input type="submit" value="Submit">  
+</form>

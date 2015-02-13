@@ -2,16 +2,15 @@ require 'sinatra'
 require 'sqlite3'
 require 'pry'
 DATABASE = SQLite3::Database.new("warehouse_manager.db")
-require_relative 'category_class.rb'
-require_relative 'product_class.rb'
-require_relative 'location_class.rb'
-require_relative 'module.rb'
-require_relative 'class_module.rb'
+require_relative "models/category_class.rb"
+require_relative "models/product_class.rb"
+require_relative "models/location_class.rb"
+require_relative "models/module.rb"
+require_relative "models/class_module.rb"
 
-# TODO these need work: Update a location, Add a product.
+DATABASE.results_as_hash = true
 
-# Before Filter
-
+# working on getting rid of these
 before do
   @name = "#{params["name"]}"
   @quantity = "#{params["quantity"]}"
@@ -79,12 +78,21 @@ end
 
 # Completed Routes for Product
 
-# TODO sometimes works
+# working...adds the object, sends off to confirm.
 get "/complete_product_add" do
-  logger.info params
-  DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES 
+  @name = params["name"]
+  @description = params["description"]
+  @quantity = params["quantity"]
+  @serial_num = params["serial_num"]
+  @cost = params["cost"]
+  @category_id = params["category_id"]
+  @location_id = params["location_id"]
+  a = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}",
+      "description"=>"#{@description}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}",
+      "category_id"=>"#{@category_id}", "location_id"=>"#{@location_id}"})
+  DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES
                   ('#{@name}', '#{@description}', #{@quantity}, #{@serial_num}, #{@cost}, #{@category_id}, #{@location_id})")
-  @id = DATABASE.last_insert_row_id 
+  @id = DATABASE.last_insert_row_id    
   erb :complete_product_add, :layout => :boilerplate 
 end
 
@@ -98,7 +106,21 @@ end
 
 # TODO not working
 get "/complete_product_update" do
-  logger.info params
+  @serial_num = params["serial_num"]
+  @category_name = params["category_name"]
+  @location_name = params["location_name"]
+  @name = params["name"]
+  @quantity = params["quantity"]
+  @desciption = params["description"]
+  @cost = params["cost"]
+  category_id = Category.find_record_id({"table"=>"categories", "field"=>"name", "value"=>"#{@category_name}"})
+  location_id = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{@location_name}"})
+  c = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}", 
+      "description"=>"#{@description}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}", 
+      "category_id"=>"#{category_id}", "location_id"=>"#{location_id}"}) 
+  
+  
+  
   erb :complete_prduct_update, :layout => :boilerplate
 end
 
@@ -157,4 +179,14 @@ get "/complete_location_delete" do
   z = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{@n}"})
   Location.delete_record({"table"=>"locations", "record_id"=>z})
   erb :complete_location_delete, :layout => :boilerplate
+end
+
+# Confirmed info pages...inserting info into database.
+
+# working. inserts product into table.
+get "/confirmed_product_add" do
+  DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES
+                  ('#{@name}', '#{@description}', #{@quantity}, #{@serial_num}, #{@cost}, #{@category_id}, #{@location_id})")
+  @id = DATABASE.last_insert_row_id
+  erb :confirmed_product_add, :layout => :boilerplate
 end

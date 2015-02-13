@@ -286,6 +286,8 @@ module WarehouseManagerCM
    
    end
    
+   #TODO
+   
    def return_all_location_names
      array = DATABASE.execute("SELECT name FROM locations")
      @temp_location_name = []
