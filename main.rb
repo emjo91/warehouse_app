@@ -10,7 +10,7 @@ require_relative "models/class_module.rb"
 
 DATABASE.results_as_hash = true
 
-# working on getting rid of these
+# working on getting rid of these...I don't think these are necessary.
 before do
   @name = "#{params["name"]}"
   @quantity = "#{params["quantity"]}"
@@ -78,7 +78,7 @@ end
 
 # Completed Routes for Product
 
-# working...adds the object, sends off to confirm.
+# working
 get "/complete_product_add" do
   @name = params["name"]
   @description = params["description"]
@@ -101,7 +101,7 @@ get "/complete_delete_product" do
   erb :complete_delete_product, :layout => :boilerplate
 end
 
-# TODO not working
+# working.
 get "/complete_product_update" do
   @serial_num = params["serial_num"]
   @category_name = params["category_name"]
@@ -110,20 +110,19 @@ get "/complete_product_update" do
   @quantity = params["quantity"]
   @desciption = params["description"]
   @cost = params["cost"]
+  @b = Product.find_record_id({"table"=>"products", "field"=>"serial_num", "value"=>@serial_num})
   category_id = Category.find_record_id({"table"=>"categories", "field"=>"name", "value"=>"#{@category_name}"})
   location_id = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{@location_name}"})
-  c = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}", 
-      "description"=>"#{@description}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}", 
-      "category_id"=>"#{category_id}", "location_id"=>"#{location_id}"}) 
-  
-  
-  
-  erb :complete_prduct_update, :layout => :boilerplate
+  @c = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}", 
+      "description"=>"#{@description1}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}", 
+      "category_id"=>category_id, "location_id"=>location_id}) 
+  @c.save({"table"=>"products", "item_id"=>@b})
+  erb :complete_product_update, :layout => :boilerplate
 end
 
 # Completed routes for product info
 
-# TODO not working
+# working
 get "/complete_product_info" do
   @sn = params["serial_num"]
   d = Product.find_record_id({"table"=>"products", "field"=>"serial_num", "value"=>@sn})
@@ -135,14 +134,14 @@ get "/complete_product_info" do
   erb :complete_product_info, :layout => :boilerplate
 end
 
-# TODO not working
+# working
 get "/complete_products_in_location" do
   @location_name = params["location_name"]
   @f = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{@location_name}"})
   erb :complete_products_in_location, :layout => :boilerplate
 end
 
-# TODO not working
+# working
 get "/complete_products_in_category" do
   @category_name = params["category_name"]
   @e = Category.find_record_id({"table"=>"categories", "field"=>"name", "value"=>"#{@category_name}"})
@@ -161,7 +160,7 @@ get "/complete_location_add" do
   erb :complete_location_add, :layout => :boilerplate
 end
 
-# TODO not working
+# working
 get "/complete_location_update" do
   @nn = params["update_location_name"]
   @n = params["location_name"]

@@ -1,7 +1,12 @@
 <h1>Update a Product</h1>
 <p>Fill out the form below to add a new product</p>
+<p>You must know the serial number of the product you want to change.</p>
 <br>
   <form action="/complete_product_update">
+    
+    <p>Serial Number</p>
+    <input type="text" name="serial_num" value="must be valid">
+    
     <p>Product Name</p>
     <input type="text" name="name">
   
@@ -11,10 +16,7 @@
     <p>Description</p>
     <textarea rows="5" cols="50" name="description">
     Please keep the description short, and concise.
-    </textarea><br><br>
-  
-    <p>Serial Number</p>
-    <input type="text" name="serial_num" value="ex: 54321">  
+    </textarea><br><br> 
     
     <p>Price</p>
     <input type="text" name="cost" value="no dollar sign please">  

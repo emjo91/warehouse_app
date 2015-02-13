@@ -2,12 +2,14 @@
 <html>
   <head>
     <link rel="stylesheet" href="/css/style.css" type="text/css" charset="utf-8">
-    <title>Warehouse App</title>
+    <title><%= @title %></title>
   </head>
   
   <body>
-    <center><%= yield%>
-    <br>
-    <nav><a href="/">Home</a> <a href="facebook.com">About the Company</a> <a href="www.facebook.com">Other</a></nav></center>
+    <div id="page-wrap">
+      <%= yield%>
+      <br>
+      <center><nav><a href="/">Home</a> - <a href="#">About the Company</a> - <a href="#">Other</a></nav></center>
+    </div> <!-- end page-wrap-->
   </body>
 </html>
