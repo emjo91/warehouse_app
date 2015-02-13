@@ -1,3 +1,6 @@
 <h1>Here's those products you requested!</h1>
 
-<!-- Spit out code for products -->
+<p><%= @category_info%></p>
+
+<p><%= @category_name %> includes: <%= Product.select_products_for_category(@e)%></p>
+

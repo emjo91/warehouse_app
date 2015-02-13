@@ -90,9 +90,6 @@ get "/complete_product_add" do
   a = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}",
       "description"=>"#{@description}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}",
       "category_id"=>"#{@category_id}", "location_id"=>"#{@location_id}"})
-  DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES
-                  ('#{@name}', '#{@description}', #{@quantity}, #{@serial_num}, #{@cost}, #{@category_id}, #{@location_id})")
-  @id = DATABASE.last_insert_row_id    
   erb :complete_product_add, :layout => :boilerplate 
 end
 
@@ -140,14 +137,16 @@ end
 
 # TODO not working
 get "/complete_products_in_location" do
-  logger.info params
-  @location_names = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{"Room 2"}"})
+  @location_name = params["location_name"]
+  @f = Location.find_record_id({"table"=>"locations", "field"=>"name", "value"=>"#{@location_name}"})
   erb :complete_products_in_location, :layout => :boilerplate
 end
 
 # TODO not working
 get "/complete_products_in_category" do
-  logger.info params
+  @category_name = params["category_name"]
+  @e = Category.find_record_id({"table"=>"categories", "field"=>"name", "value"=>"#{@category_name}"})
+  
   erb :complete_products_in_category, :layout => :boilerplate
 end
 
@@ -186,7 +185,7 @@ end
 # working. inserts product into table.
 get "/confirmed_product_add" do
   DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES
-                  ('#{@name}', '#{@description}', #{@quantity}, #{@serial_num}, #{@cost}, #{@category_id}, #{@location_id})")
+                  ('#{@name}', '#{@description}', '#{@quantity}', '#{@serial_num}', '#{@cost}', '#{@category_id}', '#{@location_id}')")
   @id = DATABASE.last_insert_row_id
   erb :confirmed_product_add, :layout => :boilerplate
 end
