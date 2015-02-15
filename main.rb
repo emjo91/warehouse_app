@@ -101,6 +101,7 @@ end
 
 # working
 get "/complete_delete_product" do
+  @serial_num = params["serial_num"]
   d = Product.find_record_id({"table"=>"products", "field"=>"serial_num", "value"=>"#{@serial_num}"}) 
   Product.delete_record({"table"=>"products", "record_id"=>d})
   erb :complete_delete_product, :layout => :boilerplate
