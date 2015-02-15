@@ -11,21 +11,22 @@ require_relative "models/class_module.rb"
 DATABASE.results_as_hash = true
 
 # working on getting rid of these...I don't think these are necessary.
-before do
-  @name = "#{params["name"]}"
-  @quantity = "#{params["quantity"]}"
-  @description = "#{params["description"]}"
-  @serial_num = "#{params["serial_num"]}"
-  @cost = "#{params["cost"]}"
-  @category_id = "#{params["category_id"]}"
-  @location_id = "#{params["location_id"]}"
-  @location_name = "#{params["location_name"]}"
-  @update_location_name = "#{params["update_location_name"]}"
-end
+# before do
+#   @name = "#{params["name"]}"
+#   @quantity = "#{params["quantity"]}"
+#   @description = "#{params["description"]}"
+#   @serial_num = "#{params["serial_num"]}"
+#   @cost = "#{params["cost"]}"
+#   @category_id = "#{params["category_id"]}"
+#   @location_id = "#{params["location_id"]}"
+#   @location_name = "#{params["location_name"]}"
+#   @update_location_name = "#{params["update_location_name"]}"
+# end
 
 # Home Page
 
 get "/" do
+  @title = "Home"
   erb :index, :layout => :boilerplate
 end
 
@@ -38,41 +39,46 @@ get "/add_product" do
 end
 
 get "/update_product" do
-  logger.info params
+  @title = "Update a Product"
   erb :update_product, :layout => :boilerplate
 end
 
 get "/delete_product" do
-  logger.info params
+  @title = "Delete a Product"
   erb :delete_product, :layout => :boilerplate
 end
 
 # Viewing product info, Nav line 2
 
 get "/product_info" do
+  @title = "Product Info"
   erb :product_info, :layout => :boilerplate
 end
 
 get "/products_in_category" do
+  @title = "Products by Category"
   erb :products_in_category, :layout => :boilerplate
 end
 
 get "/products_in_location" do
-  logger.info params
+  @title = "Products by Location"
   erb :products_in_location, :layout => :boilerplate
 end
   
 # Location information, Nav line 3
 
 get "/add_location" do
+  @title = "Add Location"
   erb :add_location, :layout => :boilerplate
 end
 
 get "/update_location" do
+  @title = "Update Location"
   erb :update_location, :layout => :boilerplate
 end
 
 get "/delete_location" do
+  @title = "Delete Location"
   erb :delete_location, :layout => :boilerplate
 end  
 
@@ -95,7 +101,6 @@ end
 
 # working
 get "/complete_delete_product" do
-  logger.info params
   d = Product.find_record_id({"table"=>"products", "field"=>"serial_num", "value"=>"#{@serial_num}"}) 
   Product.delete_record({"table"=>"products", "record_id"=>d})
   erb :complete_delete_product, :layout => :boilerplate
