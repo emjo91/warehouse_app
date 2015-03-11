@@ -1,3 +1,6 @@
+require 'gemfile'
+require 'bundler/setup'
+
 require 'sinatra'
 require 'sqlite3'
 require 'pry'
@@ -34,7 +37,6 @@ end
 
 get "/add_product" do
   @title = "Add a product"
-  logger.info params
   erb :add_product, :layout => :boilerplate
 end
 
@@ -93,9 +95,8 @@ get "/complete_product_add" do
   @cost = params["cost"]
   @category_id = params["category_id"]
   @location_id = params["location_id"]
-  a = Product.new({"name"=>"#{@name}", "quantity"=>"#{@quantity}",
-      "description"=>"#{@description}", "serial_num"=>"#{@serial_num}", "cost"=>"#{@cost}",
-      "category_id"=>"#{@category_id}", "location_id"=>"#{@location_id}"})
+  @a = Product.new(params)
+  binding.pry
   erb :complete_product_add, :layout => :boilerplate 
 end
 
@@ -189,8 +190,11 @@ end
 
 # working. inserts product into table.
 get "/confirmed_product_add" do
-  DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES
-                  ('#{@name}', '#{@description}', '#{@quantity}', '#{@serial_num}', '#{@cost}', '#{@category_id}', '#{@location_id}')")
-  @id = DATABASE.last_insert_row_id
+  @b = Product.new(params)
+  binding.pry
+  @b.insert
+  # DATABASE.execute("INSERT INTO products (name, description, quantity, serial_num, cost, category_id, location_id) VALUES
+#                   ('#{@name}', '#{@description}', '#{@quantity}', '#{@serial_num}', '#{@cost}', '#{@category_id}', '#{@location_id}')")
+#   @id = DATABASE.last_insert_row_id
   erb :confirmed_product_add, :layout => :boilerplate
 end

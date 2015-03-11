@@ -365,7 +365,8 @@ module WarehouseManagerCM
   def select_all(options)
     table = options["table"]
     results = DATABASE.execute("SELECT * FROM #{table}")
-    return delete_secondary_kvpairs(results, :placeholder) # delete_secondary_kvpairs(results)
+    return delete_secondary_kvpairs(results, :placeholder) 
+    # delete_secondary_kvpairs(results)
   end
   
   # Public: #delete_secondary_kvpairs
@@ -512,9 +513,6 @@ module WarehouseManagerCM
   def exterminate(table)
     DATABASE.execute("DROP TABLE #{table}") 
   end
-
-
-
 
 
 
